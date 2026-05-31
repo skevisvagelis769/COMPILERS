@@ -67,7 +67,7 @@
 
 
 /* First part of user prologue.  */
-#line 8 "parser.y"
+#line 2 "parser.y"
 
 
 /* Orismoi kai dhlwseis glwssas C. */
@@ -83,7 +83,7 @@ extern FILE *yyin;
 int yylex();
 int yyerror(char *s);
 
-/* --- MNHMH METABLHTWN (Symbol Table) --- */
+/* --- VARIABLE MEMORY (Symbol Table) --- */
 char* var_names[100];
 int var_values[100];
 int var_count = 0;
@@ -546,8 +546,8 @@ static const yytype_int8 yytranslate[] =
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int8 yyrline[] =
 {
-       0,    73,    73,    74,    77,    78,    81,    85,    89,    93,
-      96,    97,    98,    99,   100,   101,   102
+       0,    67,    67,    68,    71,    72,    75,    79,    83,    87,
+      90,    91,    92,    93,    94,    95,    96
 };
 #endif
 
@@ -1126,13 +1126,13 @@ yyreduce:
   switch (yyn)
     {
   case 3: /* program: error TOK_RPAREN  */
-#line 74 "parser.y"
+#line 68 "parser.y"
                            { printf("\n\t### Line:%d ERROR\n", line); errflag=1; }
 #line 1132 "parser.tab.c"
     break;
 
   case 6: /* statement: TOK_VARIABLE TOK_ASSIGN expression  */
-#line 82 "parser.y"
+#line 76 "parser.y"
                 { 
 			set_var((yyvsp[-2].str), (yyvsp[0].num));
 		}
@@ -1140,7 +1140,7 @@ yyreduce:
     break;
 
   case 7: /* statement: TOK_SHOW TOK_LBRACE expression TOK_RBRACE  */
-#line 86 "parser.y"
+#line 80 "parser.y"
                 { 
 			printf(">> OTHONH: %d\n", (yyvsp[-1].num));
 		}
@@ -1148,7 +1148,7 @@ yyreduce:
     break;
 
   case 8: /* statement: TOK_SHOW TOK_LBRACE TOK_STRING TOK_RBRACE  */
-#line 90 "parser.y"
+#line 84 "parser.y"
                 { 
 			printf(">> OTHONH: %s\n", (yyvsp[-1].str));
 		}
@@ -1156,49 +1156,49 @@ yyreduce:
     break;
 
   case 9: /* statement: error  */
-#line 93 "parser.y"
+#line 87 "parser.y"
                  { printf("\n\t### Line:%d ERROR\n", line); errflag=1; }
 #line 1162 "parser.tab.c"
     break;
 
   case 10: /* expression: expression TOK_PLUS expression  */
-#line 96 "parser.y"
+#line 90 "parser.y"
                                              { (yyval.num) = (yyvsp[-2].num) + (yyvsp[0].num); }
 #line 1168 "parser.tab.c"
     break;
 
   case 11: /* expression: expression TOK_MINUS expression  */
-#line 97 "parser.y"
+#line 91 "parser.y"
                                              { (yyval.num) = (yyvsp[-2].num) - (yyvsp[0].num); }
 #line 1174 "parser.tab.c"
     break;
 
   case 12: /* expression: expression TOK_MUL expression  */
-#line 98 "parser.y"
+#line 92 "parser.y"
                                              { (yyval.num) = (yyvsp[-2].num) * (yyvsp[0].num); }
 #line 1180 "parser.tab.c"
     break;
 
   case 13: /* expression: expression TOK_DIV expression  */
-#line 99 "parser.y"
+#line 93 "parser.y"
                                              { (yyval.num) = (yyvsp[-2].num) / (yyvsp[0].num); }
 #line 1186 "parser.tab.c"
     break;
 
   case 14: /* expression: TOK_LPAREN expression TOK_RPAREN  */
-#line 100 "parser.y"
+#line 94 "parser.y"
                                              { (yyval.num) = (yyvsp[-1].num); }
 #line 1192 "parser.tab.c"
     break;
 
   case 15: /* expression: TOK_VARIABLE  */
-#line 101 "parser.y"
+#line 95 "parser.y"
                                              { (yyval.num) = get_var((yyvsp[0].str)); }
 #line 1198 "parser.tab.c"
     break;
 
   case 16: /* expression: TOK_INTEGER  */
-#line 102 "parser.y"
+#line 96 "parser.y"
                                              { (yyval.num) = (yyvsp[0].num); }
 #line 1204 "parser.tab.c"
     break;
@@ -1397,16 +1397,15 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 105 "parser.y"
+#line 99 "parser.y"
 
 
-/* Epiprosthetos kwdikas-xrhsth se glwssa C. */
 
-/* H synarthsh yyerror xrhsimopoieitai gia thn anafora sfalmatwn. */
+/* YYERROR IS USED TO INFORM THE USER ABOUT ERRORS */
 int yyerror(char *s)
 {}
 
-/* H synarthsh main pou apotelei kai to shmeio ekkinhshs tou programmatos. */
+/* MAIN FUNCTION THATS THE STARTING POINT OF THE PROGRAM. */
 int main(int argc, char **argv)
 {
 	if(argc == 2)
@@ -1417,9 +1416,9 @@ int main(int argc, char **argv)
 	int parse = yyparse();
 
 	if (errflag == 0 && parse == 0)
-		printf("\nINPUT FILE: PARSING SUCCEEDED.\n");
+		printf("\nSUCCESS COMPILE\n");
 	else
-		printf("\nINPUT FILE: PARSING FAILED.\n");
+		printf("\nUNSUCCESSFUL COMPILE.\n");
 
 	return 0;
 }

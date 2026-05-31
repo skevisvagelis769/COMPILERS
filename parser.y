@@ -14,7 +14,7 @@ extern FILE *yyin;
 int yylex();
 int yyerror(char *s);
 
-/* --- MNHMH METABLHTWN (Symbol Table) --- */
+/* --- VARIABLE MEMORY (Symbol Table) --- */
 char* var_names[100];
 int var_values[100];
 int var_count = 0;
@@ -41,7 +41,7 @@ int get_var(char* name) {
 }
 %}
 
-/* Dhlwseis kai orismoi Bison */
+/*  BISON VARIABLE DECLARATIONS */
 %union {
     int num;
     char* str;
@@ -62,7 +62,7 @@ int get_var(char* name) {
 
 %%
 
-/* Orismos twn grammatikwn kanonwn. */
+/* GRAMMATICAL RULES. */
 
 program	: TOK_MAIN TOK_LPAREN statements TOK_RPAREN
 	| error TOK_RPAREN { printf("\n\t### Line:%d ERROR\n", line); errflag=1; }
@@ -98,13 +98,12 @@ expression: expression TOK_PLUS expression   { $$ = $1 + $3; }
 
 %%
 
-/* Epiprosthetos kwdikas-xrhsth se glwssa C. */
 
-/* H synarthsh yyerror xrhsimopoieitai gia thn anafora sfalmatwn. */
+/* YYERROR IS USED TO INFORM THE USER ABOUT ERRORS */
 int yyerror(char *s)
 {}
 
-/* H synarthsh main pou apotelei kai to shmeio ekkinhshs tou programmatos. */
+/* MAIN FUNCTION THATS THE STARTING POINT OF THE PROGRAM. */
 int main(int argc, char **argv)
 {
 	if(argc == 2)
@@ -115,9 +114,9 @@ int main(int argc, char **argv)
 	int parse = yyparse();
 
 	if (errflag == 0 && parse == 0)
-		printf("\nINPUT FILE: PARSING SUCCEEDED.\n");
+		printf("\nSUCCESS COMPILE\n");
 	else
-		printf("\nINPUT FILE: PARSING FAILED.\n");
+		printf("\nUNSUCCESSFUL COMPILE.\n");
 
 	return 0;
 }

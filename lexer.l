@@ -6,13 +6,13 @@
 #include <stdlib.h>
 #include <string.h>
 
-// Header file pou periexei lista me ola ta tokens
+// Header file that has the token list
 #include "parser.tab.h"
 
 extern int line;
 %}
 
-// Onomata kai antistoixoi orismoi ypo morfh kanonikhs ekfrashs
+// Variables/names and their respective regex 
 DELIMITERS  [ \t\r]+
 ID          [0-9]*[a-zA-Z][a-zA-Z0-9]*
 NUMBER      ([1-9][0-9]*|0)
@@ -38,10 +38,10 @@ STRING      \"[^\"]*\"
 {NUMBER}    { yylval.num = atoi(yytext); return TOK_INTEGER; }
 {STRING}    { yylval.str = strdup(yytext); return TOK_STRING; }
 
-![^\n]* { /* Agnooume ta sxolia */ }
-{DELIMITERS} { /* Agnooume ta kena */ }
+![^\n]* { /* Ignore the comments */ }
+{DELIMITERS} { /* Ignore the spaces */ }
 \n          { line++; }
 
-.           { printf("\n\tToken error '%s' sth grammh %d\n", yytext, line); }
+.           { printf("\n\tToken error '%s' in line %d\n", yytext, line); }
 
 %%
