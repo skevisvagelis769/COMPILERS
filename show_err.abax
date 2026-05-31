@@ -1,0 +1,5 @@
+main(
+! error
+val = 5 % 10
+SHOW{val
+)

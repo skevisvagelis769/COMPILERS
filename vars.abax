@@ -1,0 +1,5 @@
+main(
+    val<= 6+2
+    2val<= 2*val
+    SHOW{2val}
+)
