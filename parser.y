@@ -7,7 +7,8 @@
 #include <string.h>
 
 int line = 1;
-int errflag = 0;
+int error_count = 0;
+char output_buffer[4096] = "";
 extern char *yytext;
 extern FILE *yyin;
 
@@ -65,11 +66,11 @@ int get_var(char* name) {
 /* Orismos twn grammatikwn kanonwn. */
 
 program	: TOK_MAIN TOK_LPAREN statements TOK_RPAREN
-	| error TOK_RPAREN { printf("\n\t### Line:%d ERROR\n", line); errflag=1; }
+	| error TOK_RPAREN { printf("\t[Error %d] Line:%d ERROR\n", ++error_count, line); }
 	;
 
 statements: statement statements
-	  | /* keno */
+	  | 
 	  ;
 
 statement: TOK_VARIABLE TOK_ASSIGN expression 
@@ -78,19 +79,32 @@ statement: TOK_VARIABLE TOK_ASSIGN expression
 		}
 	 | TOK_SHOW TOK_LBRACE expression TOK_RBRACE 
 		{ 
-			printf(">> OTHONH: %d\n", $3);
+			char temp[100];
+			sprintf(temp, "%d\n", $3);
+			strcat(output_buffer, temp);
 		}
 	 | TOK_SHOW TOK_LBRACE TOK_STRING TOK_RBRACE 
 		{ 
-			printf(">> OTHONH: %s\n", $3);
+			char temp[256];
+			sprintf(temp, "%s\n", $3);
+			strcat(output_buffer, temp);
 		}
-         | error { printf("\n\t### Line:%d ERROR\n", line); errflag=1; }
+         | error { printf("\t[Error %d] Line:%d ERROR\n", ++error_count, line); }
 	 ;
 
 expression: expression TOK_PLUS expression   { $$ = $1 + $3; }
 	  | expression TOK_MINUS expression  { $$ = $1 - $3; }
 	  | expression TOK_MUL expression    { $$ = $1 * $3; }
-	  | expression TOK_DIV expression    { $$ = $1 / $3; }
+	  | expression TOK_DIV expression    
+	  { 
+		if($3==0)
+		{
+			printf("\t[Error %d] Line:%d Error: Division by zero\n", ++error_count, line);
+			$$=0;
+		}else{
+			$$=$1/$3;
+		}
+	   }
 	  | TOK_LPAREN expression TOK_RPAREN { $$ = $2; }
 	  | TOK_VARIABLE                     { $$ = get_var($1); }
 	  | TOK_INTEGER                      { $$ = $1; }
@@ -114,10 +128,13 @@ int main(int argc, char **argv)
 
 	int parse = yyparse();
 
-	if (errflag == 0 && parse == 0)
+	if (error_count == 0 && parse == 0){
+		printf("\nErrors: 0.\n");
+		printf("Output: \n%s", output_buffer);
 		printf("\nINPUT FILE: PARSING SUCCEEDED.\n");
-	else
+	} else {
+		printf("\nErrors: %d\n", error_count);
 		printf("\nINPUT FILE: PARSING FAILED.\n");
-
+	}
 	return 0;
 }

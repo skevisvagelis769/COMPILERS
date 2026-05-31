@@ -67,7 +67,7 @@
 
 
 /* First part of user prologue.  */
-#line 8 "parser.y"
+#line 2 "parser.y"
 
 
 /* Orismoi kai dhlwseis glwssas C. */
@@ -76,7 +76,8 @@
 #include <string.h>
 
 int line = 1;
-int errflag = 0;
+int error_count = 0;
+char output_buffer[4096] = "";
 extern char *yytext;
 extern FILE *yyin;
 
@@ -109,7 +110,7 @@ int get_var(char* name) {
     return 0;
 }
 
-#line 113 "parser.tab.c"
+#line 114 "parser.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -546,8 +547,8 @@ static const yytype_int8 yytranslate[] =
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int8 yyrline[] =
 {
-       0,    73,    73,    74,    77,    78,    81,    85,    89,    93,
-      96,    97,    98,    99,   100,   101,   102
+       0,    68,    68,    69,    72,    73,    76,    80,    86,    92,
+      95,    96,    97,    98,   108,   109,   110
 };
 #endif
 
@@ -1126,85 +1127,97 @@ yyreduce:
   switch (yyn)
     {
   case 3: /* program: error TOK_RPAREN  */
-#line 74 "parser.y"
-                           { printf("\n\t### Line:%d ERROR\n", line); errflag=1; }
-#line 1132 "parser.tab.c"
+#line 69 "parser.y"
+                           { printf("\t[Error %d] Line:%d ERROR\n", ++error_count, line); }
+#line 1133 "parser.tab.c"
     break;
 
   case 6: /* statement: TOK_VARIABLE TOK_ASSIGN expression  */
-#line 82 "parser.y"
+#line 77 "parser.y"
                 { 
 			set_var((yyvsp[-2].str), (yyvsp[0].num));
 		}
-#line 1140 "parser.tab.c"
+#line 1141 "parser.tab.c"
     break;
 
   case 7: /* statement: TOK_SHOW TOK_LBRACE expression TOK_RBRACE  */
-#line 86 "parser.y"
+#line 81 "parser.y"
                 { 
-			printf(">> OTHONH: %d\n", (yyvsp[-1].num));
+			char temp[100];
+			sprintf(temp, "%d\n", (yyvsp[-1].num));
+			strcat(output_buffer, temp);
 		}
-#line 1148 "parser.tab.c"
+#line 1151 "parser.tab.c"
     break;
 
   case 8: /* statement: TOK_SHOW TOK_LBRACE TOK_STRING TOK_RBRACE  */
-#line 90 "parser.y"
+#line 87 "parser.y"
                 { 
-			printf(">> OTHONH: %s\n", (yyvsp[-1].str));
+			char temp[256];
+			sprintf(temp, "%s\n", (yyvsp[-1].str));
+			strcat(output_buffer, temp);
 		}
-#line 1156 "parser.tab.c"
+#line 1161 "parser.tab.c"
     break;
 
   case 9: /* statement: error  */
-#line 93 "parser.y"
-                 { printf("\n\t### Line:%d ERROR\n", line); errflag=1; }
-#line 1162 "parser.tab.c"
+#line 92 "parser.y"
+                 { printf("\t[Error %d] Line:%d ERROR\n", ++error_count, line); }
+#line 1167 "parser.tab.c"
     break;
 
   case 10: /* expression: expression TOK_PLUS expression  */
-#line 96 "parser.y"
+#line 95 "parser.y"
                                              { (yyval.num) = (yyvsp[-2].num) + (yyvsp[0].num); }
-#line 1168 "parser.tab.c"
+#line 1173 "parser.tab.c"
     break;
 
   case 11: /* expression: expression TOK_MINUS expression  */
-#line 97 "parser.y"
+#line 96 "parser.y"
                                              { (yyval.num) = (yyvsp[-2].num) - (yyvsp[0].num); }
-#line 1174 "parser.tab.c"
+#line 1179 "parser.tab.c"
     break;
 
   case 12: /* expression: expression TOK_MUL expression  */
-#line 98 "parser.y"
+#line 97 "parser.y"
                                              { (yyval.num) = (yyvsp[-2].num) * (yyvsp[0].num); }
-#line 1180 "parser.tab.c"
+#line 1185 "parser.tab.c"
     break;
 
   case 13: /* expression: expression TOK_DIV expression  */
 #line 99 "parser.y"
-                                             { (yyval.num) = (yyvsp[-2].num) / (yyvsp[0].num); }
-#line 1186 "parser.tab.c"
+          { 
+		if((yyvsp[0].num)==0)
+		{
+			printf("\t[Error %d] Line:%d Error: Division by zero\n", ++error_count, line);
+			(yyval.num)=0;
+		}else{
+			(yyval.num)=(yyvsp[-2].num)/(yyvsp[0].num);
+		}
+	   }
+#line 1199 "parser.tab.c"
     break;
 
   case 14: /* expression: TOK_LPAREN expression TOK_RPAREN  */
-#line 100 "parser.y"
+#line 108 "parser.y"
                                              { (yyval.num) = (yyvsp[-1].num); }
-#line 1192 "parser.tab.c"
+#line 1205 "parser.tab.c"
     break;
 
   case 15: /* expression: TOK_VARIABLE  */
-#line 101 "parser.y"
+#line 109 "parser.y"
                                              { (yyval.num) = get_var((yyvsp[0].str)); }
-#line 1198 "parser.tab.c"
+#line 1211 "parser.tab.c"
     break;
 
   case 16: /* expression: TOK_INTEGER  */
-#line 102 "parser.y"
+#line 110 "parser.y"
                                              { (yyval.num) = (yyvsp[0].num); }
-#line 1204 "parser.tab.c"
+#line 1217 "parser.tab.c"
     break;
 
 
-#line 1208 "parser.tab.c"
+#line 1221 "parser.tab.c"
 
       default: break;
     }
@@ -1397,7 +1410,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 105 "parser.y"
+#line 113 "parser.y"
 
 
 /* Epiprosthetos kwdikas-xrhsth se glwssa C. */
@@ -1416,10 +1429,13 @@ int main(int argc, char **argv)
 
 	int parse = yyparse();
 
-	if (errflag == 0 && parse == 0)
+	if (error_count == 0 && parse == 0){
+		printf("\nErrors: 0.\n");
+		printf("Output: \n%s", output_buffer);
 		printf("\nINPUT FILE: PARSING SUCCEEDED.\n");
-	else
+	} else {
+		printf("\nErrors: %d\n", error_count);
 		printf("\nINPUT FILE: PARSING FAILED.\n");
-
+	}
 	return 0;
 }

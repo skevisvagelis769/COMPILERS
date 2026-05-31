@@ -1,0 +1,4 @@
+main{
+val=3/0
+SHOW{val}
+}

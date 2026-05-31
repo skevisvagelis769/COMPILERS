@@ -1,4 +1,3 @@
-
 %option noyywrap
 
 %{
@@ -10,9 +9,10 @@
 #include "parser.tab.h"
 
 extern int line;
+extern int error_count;
 %}
 
-// Onomata kai antistoixoi orismoi ypo morfh kanonikhs ekfrashs
+/* Onomata kai antistoixoi orismoi ypo morfh kanonikhs ekfrashs */
 DELIMITERS  [ \t\r]+
 ID          [0-9]*[a-zA-Z][a-zA-Z0-9]*
 NUMBER      ([1-9][0-9]*|0)
@@ -38,10 +38,10 @@ STRING      \"[^\"]*\"
 {NUMBER}    { yylval.num = atoi(yytext); return TOK_INTEGER; }
 {STRING}    { yylval.str = strdup(yytext); return TOK_STRING; }
 
-![^\n]* { /* Agnooume ta sxolia */ }
-{DELIMITERS} { /* Agnooume ta kena */ }
+![^\n]* {  }
+{DELIMITERS} {  }
 \n          { line++; }
 
-.           { printf("\n\tToken error '%s' sth grammh %d\n", yytext, line); }
+.           { printf("\t[Error %d] Wrong symbol '%s' (on line %d)\n", ++error_count, yytext, line); }
 
 %%
