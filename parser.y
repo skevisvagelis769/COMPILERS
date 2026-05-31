@@ -130,10 +130,10 @@ int main(int argc, char **argv)
 	if (error_count == 0 && parse == 0){
 		printf("\nErrors: 0.\n");
 		printf("Output: \n%s", output_buffer);
-		printf("\nINPUT FILE: PARSING SUCCEEDED.\n");
+		printf("\nSUCCESSFULY COMPILED.\n");
 	} else {
 		printf("\nErrors: %d\n", error_count);
-		printf("\nINPUT FILE: PARSING FAILED.\n");
+		printf("\nUNSUCCESSFULY COMPILED.\n");
 	}
 	return 0;
 }
