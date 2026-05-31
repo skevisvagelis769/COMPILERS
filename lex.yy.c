@@ -472,13 +472,13 @@ char *yytext;
 #include <stdlib.h>
 #include <string.h>
 
-// Header file pou periexei lista me ola ta tokens
+/* Header file that has the token list */
 #include "parser.tab.h"
 
 extern int line;
 extern int error_count;
 #line 481 "lex.yy.c"
-/* Onomata kai antistoixoi orismoi ypo morfh kanonikhs ekfrashs */
+/* Variable names and their regex */
 #line 483 "lex.yy.c"
 
 #define INITIAL 0

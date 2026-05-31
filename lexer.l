@@ -5,14 +5,14 @@
 #include <stdlib.h>
 #include <string.h>
 
-// Header file pou periexei lista me ola ta tokens
+/* Header file that has the token list */
 #include "parser.tab.h"
 
 extern int line;
 extern int error_count;
 %}
 
-/* Onomata kai antistoixoi orismoi ypo morfh kanonikhs ekfrashs */
+/* Variable names and their regex */
 DELIMITERS  [ \t\r]+
 ID          [0-9]*[a-zA-Z][a-zA-Z0-9]*
 NUMBER      ([1-9][0-9]*|0)

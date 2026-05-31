@@ -84,7 +84,7 @@ extern FILE *yyin;
 int yylex();
 int yyerror(char *s);
 
-/* --- MNHMH METABLHTWN (Symbol Table) --- */
+/* --- VARIABLE MEMORY (Symbol Table) --- */
 char* var_names[100];
 int var_values[100];
 int var_count = 0;
@@ -1413,13 +1413,12 @@ yyreturnlab:
 #line 113 "parser.y"
 
 
-/* Epiprosthetos kwdikas-xrhsth se glwssa C. */
 
-/* H synarthsh yyerror xrhsimopoieitai gia thn anafora sfalmatwn. */
+/* YYERROR IS USED TO INFORM THE USER ABOUT ERRORS */
 int yyerror(char *s)
 {}
 
-/* H synarthsh main pou apotelei kai to shmeio ekkinhshs tou programmatos. */
+/* MAIN FUNCTION THATS THE STARTING POINT OF THE PROGRAM. */
 int main(int argc, char **argv)
 {
 	if(argc == 2)
